@@ -48,6 +48,7 @@ function App() {
   const boardRef = useRef(null);
   const boardSize = useComponentSize(boardRef);
   const { height, width } = boardSize;
+  const showDialog = useCallback(() => setIsAddOpen(true), []);
 
   useEffect(() => {
     if (height && width) {
@@ -94,7 +95,7 @@ function App() {
     >
       {cardEls}
       <Summary cards={cards} />
-      <AddButton onClick={() => setIsAddOpen(true)} />
+      <AddButton onClick={showDialog} />
       {isAddOpen && (
         <AddModal
           isOpen={isAddOpen}
