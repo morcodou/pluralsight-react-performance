@@ -31,12 +31,15 @@ function parseData() {
 function addCard(cards, label) {
   const id = uuid.v4();
 
-  cards[id] = {
-    id,
-    label,
-    offset: {
-      x: 0,
-      y: 0
+  return {
+    ...cards,
+    [id]: {
+      id,
+      label,
+      offset: {
+        x: 0,
+        y: 0
+      }
     }
   };
 }
@@ -59,8 +62,10 @@ function App() {
   }, [height, width]);
 
   function handleDelete(card) {
-    delete cards[card.id];
-    setCards({ ...cards });
+    const cloneCards = { ...cards };
+    delete cloneCards[card.id];
+
+    setCards(cloneCards);
   }
 
   const cardEls = Object.values(cards).map(card => (
