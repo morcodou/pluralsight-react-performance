@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import levenshtein from "levenshtein";
 import "./Summary.css";
 import { CornerButton } from "./CornerButton";
@@ -11,18 +11,24 @@ export const Summary = React.memo(
 
 
     console.time('calc-distances')
-    const distances = { max: 0, min: 100000 };
-    cards.forEach(currentCard => {
-      cards.forEach(compareCard => {
-        if (compareCard === currentCard) {
-          return;
-        }
-        const distance = levenshtein(currentCard.label, compareCard.label);
+    const distances = useMemo(() => {
+      const distanceCalcs = { max: 0, min: 100000 };
 
-        distances.max = Math.max(distances.max, distance);
-        distances.min = Math.min(distances.min, distance);
+      cards.forEach(currentCard => {
+        cards.forEach(compareCard => {
+          if (compareCard === currentCard) {
+            return;
+          }
+          const distance = levenshtein(currentCard.label, compareCard.label);
+
+          distanceCalcs.max = Math.max(distanceCalcs.max, distance);
+          distanceCalcs.min = Math.min(distanceCalcs.min, distance);
+        });
       });
-    });
+
+      return distanceCalcs;
+    }, [Object.keys(cards).length])
+
     console.timeEnd('calc-distances')
 
     return (
